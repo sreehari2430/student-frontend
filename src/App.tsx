@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import './App.css';
 
 function App() {
 
@@ -6,6 +7,10 @@ function App() {
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+
+  const HER_NAME = "archana"; // <-- put her real name here, lowercase
+
+  const isHer = name.trim().toLowerCase() === HER_NAME;
 
   useEffect(() => {
     fetch('https://student-management-02vn.onrender.com/student')
@@ -28,18 +33,37 @@ function App() {
   }
 
   return (
-    <div>
-      <h1>firsttyyyy</h1>
-      
+    <div className="container">
+      <h1>Student Manager</h1>
+
       <ul>
         {students.map((student, index) => (
-          <li key={index}>{student.name} - {student.email}</li>
+          <li className="list-item" key={index}>{student.name} - {student.email}</li>
         ))}
       </ul>
 
-      <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
-      <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
-      <button onClick={addStudent}>Add</button>
+      <div className="form">
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
+        <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
+        <button onClick={addStudent} disabled={isHer}>Add</button>
+      </div>
+
+      {isHer && (
+        <div className="hearts-container">
+          <div className="love-message">
+            You're already in etta's heart, so you can't be added here 💕
+          </div>
+          {[...Array(8)].map((_, i) => (
+            <span
+              key={i}
+              className="heart"
+              style={{ left: `${Math.random() * 90}%`, animationDelay: `${i * 0.2}s` }}
+            >
+              ❤️
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
